@@ -1,0 +1,401 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "list-transformer",
+  "identifier": "order-netsuite-restructure",
+  "name": "Netsuite Order restructure",
+  "description": "Transform attribute options for Magento 2 entity",
+  "object": {
+    "prototype": "chain",
+    "parameters": {
+      "transformers": [
+        {
+          "prototype": "data",
+          "parameters": {
+            "filters": [
+              {
+                "prototype": "value-condition",
+                "parameters": {
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": {
+                      "pattern": "orderStatus.status"
+                    }
+                  },
+                  "conditions": [
+                    {
+                      "prototype": "equals",
+                      "parameters": {
+                        "value": "%{status}"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "prototype": "data",
+          "parameters": {
+            "transformers": [
+              {
+                "prototype": "list-mapper",
+                "parameters": {
+                  "mappers": [
+                    {
+                      "prototype": "list-inherit-from",
+                      "parameters": {
+                        "array": {
+                          "result": {
+                            "item": {
+                              "items": "&{orderedItem}"
+                            },
+                            "memo": "Alumio order",
+                            "entity": {
+                              "id": ""
+                            },
+                            "currency": {
+                              "id": ""
+                            },
+                            "externalId": "&{orderNumber}",
+                            "shipMethod": {
+                              "id": "&{orderDelivery.provider.identifier}"
+                            },
+                            "exchangeRate": 1,
+                            "shipOverride": true,
+                            "shippingCost": "",
+                            "billingAddress": {
+                              "zip": "&{billingAddress.postalCode}",
+                              "city": "&{billingAddress.addressLocality}",
+                              "addr1": "",
+                              "country": {
+                                "id": "&{billingAddress.addressCountry}"
+                              },
+                              "override": true,
+                              "addrPhone": "&{billingAddress.telephone}",
+                              "addressee": ""
+                            },
+                            "shippingAddress": {
+                              "zip": "&{orderDelivery.deliveryAddress.postalCode}",
+                              "city": "&{orderDelivery.deliveryAddress.addressLocality}",
+                              "addr1": "",
+                              "country": {
+                                "id": "&{orderDelivery.deliveryAddress.addressCountry}"
+                              },
+                              "override": true,
+                              "addrPhone": "&{orderDelivery.deliveryAddress.telephone}",
+                              "addressee": ""
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "accessor": {
+                    "prototype": "key",
+                    "parameters": []
+                  }
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "billingAddress.streetAddress",
+                  "replacement": "result.billingAddress.addr1"
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "orderDelivery.deliveryAddress.streetAddress",
+                  "replacement": "result.shippingAddress.addr1"
+                }
+              },
+              {
+                "prototype": "value-mapper",
+                "parameters": {
+                  "mappers": [
+                    {
+                      "prototype": "list-concat",
+                      "parameters": {
+                        "glue": " "
+                      }
+                    }
+                  ],
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": {
+                      "pattern": "result.billingAddress.addr1"
+                    }
+                  }
+                }
+              },
+              {
+                "prototype": "value-mapper",
+                "parameters": {
+                  "mappers": [
+                    {
+                      "prototype": "list-concat",
+                      "parameters": {
+                        "glue": " "
+                      }
+                    }
+                  ],
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": {
+                      "pattern": "result.shippingAddress.addr1"
+                    }
+                  }
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "billingAddress.firstname",
+                  "replacement": "Billingname.0"
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "billingAddress.lastname",
+                  "replacement": "Billingname.1"
+                }
+              },
+              {
+                "prototype": "value-mapper",
+                "parameters": {
+                  "mappers": [
+                    {
+                      "prototype": "list-concat",
+                      "parameters": {
+                        "glue": " "
+                      }
+                    }
+                  ],
+                  "accessor": {
+                    "prototype": "key",
+                    "parameters": {
+                      "keys": [
+                        "Billingname"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "Billingname",
+                  "replacement": "result.billingAddress.addressee"
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "orderDelivery.deliveryAddress.firstname",
+                  "replacement": "Shippingname.0"
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "orderDelivery.deliveryAddress.lastname",
+                  "replacement": "Shippingname.1"
+                }
+              },
+              {
+                "prototype": "value-mapper",
+                "parameters": {
+                  "mappers": [
+                    {
+                      "prototype": "list-concat",
+                      "parameters": {
+                        "glue": " "
+                      }
+                    }
+                  ],
+                  "accessor": {
+                    "prototype": "key",
+                    "parameters": {
+                      "keys": [
+                        "Shippingname"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "Shippingname",
+                  "replacement": "result.shippingAddress.addressee"
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "partofInvoice.0.currency",
+                  "replacement": "result.currency.id"
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "partofInvoice.0.totalPaymentDue",
+                  "replacement": "result.items.shippingCost"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "prototype": "node",
+          "parameters": {
+            "accessor": {
+              "prototype": "pattern",
+              "parameters": {
+                "pattern": "result.item.items.*"
+              }
+            },
+            "nodeTransformers": [
+              {
+                "prototype": "key-mapper",
+                "parameters": {
+                  "mappers": [
+                    {
+                      "prototype": "dictionary-map",
+                      "parameters": {
+                        "map": [
+                          [
+                            "orderQuantity",
+                            "quantity"
+                          ]
+                        ],
+                        "comparator": "equals-adaptive"
+                      }
+                    }
+                  ],
+                  "accessor": {
+                    "prototype": "key",
+                    "parameters": []
+                  }
+                }
+              },
+              {
+                "prototype": "pattern-move",
+                "parameters": {
+                  "pattern": "orderedItem.offers.priceSpecification.base_row_total_incl_tax.totalPaymentDue",
+                  "replacement": "amount"
+                }
+              },
+              {
+                "prototype": "pattern-move",
+                "parameters": {
+                  "pattern": "orderedItem.sku",
+                  "replacement": "item.externalId"
+                }
+              },
+              {
+                "prototype": "list-mapper",
+                "parameters": {
+                  "mappers": [
+                    {
+                      "prototype": "list-diff-keys",
+                      "parameters": {
+                        "array": {
+                          "@type": true,
+                          "orderedItem": true
+                        }
+                      }
+                    }
+                  ],
+                  "accessor": {
+                    "prototype": "key",
+                    "parameters": []
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "prototype": "node",
+          "parameters": {
+            "accessor": {
+              "prototype": "pattern",
+              "parameters": {
+                "pattern": "result.item.items.*"
+              }
+            },
+            "nodeTransformers": [
+              {
+                "prototype": "merger",
+                "parameters": {
+                  "template": {
+                    "tmp": "&{@}"
+                  },
+                  "transformer": {
+                    "prototype": "http-transformer",
+                    "parameters": {
+                      "client": "%{client}",
+                      "request": {
+                        "uri": "/record/v1/inventoryitem?q=itemID IS &{item.externalId}",
+                        "method": "get"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "prototype": "pattern-copy",
+                "parameters": {
+                  "pattern": "tmp.items.0.id",
+                  "replacement": "item.id"
+                }
+              },
+              {
+                "prototype": "pattern-move",
+                "parameters": {
+                  "pattern": "item.externalId",
+                  "replacement": "externalId"
+                }
+              },
+              {
+                "prototype": "key-filter",
+                "parameters": {
+                  "accessor": {
+                    "prototype": "key",
+                    "parameters": {
+                      "keys": [
+                        "tmp",
+                        "externalId"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "schema": {
+    "properties": {
+      "client": {
+        "title": "HTTP Client",
+        "default": "default",
+        "magement": {
+          "type": "http-client"
+        }
+      },
+      "status": {
+        "type": "string",
+        "title": "Status",
+        "default": "processing"
+      }
+    }
+  }
+}
