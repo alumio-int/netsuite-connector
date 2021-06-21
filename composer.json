@@ -1,0 +1,59 @@
+{
+    "name": "alumio/netsuite-connector",
+    "description": "Connect to NetSuite in Alumio",
+    "type": "library",
+    "license": "proprietary",
+    "prefer-stable": true,
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Alumio",
+            "email": "contact@alumio.com"
+        }
+    ],
+    "repositories": {
+        "mediact": {
+            "type": "composer",
+            "url": "https://composer.mediact.nl"
+        }
+    },
+    "require": {
+        "php": "^7.3",
+        "ext-json": "*",
+        "magement/oauth": "^1.0@RC",
+        "magement/publisher-api": "^1.0@RC",
+        "magement/subscriber-api": "^1.0@RC",
+        "mediact/data-container-transformer": "^4.0",
+        "mediact/variable-expander": "^1.0",
+        "psr/http-server-handler": "^1.0"
+    },
+    "require-dev": {
+        "mediact/testing-suite": "@stable"
+    },
+    "autoload": {
+        "psr-4": {
+            "Alumio\\NetSuiteConnector\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Alumio\\NetSuiteConnector\\Tests\\": "tests"
+        }
+    },
+    "archive": {
+        "exclude": [
+            "/tests",
+            "/.gitignore",
+            "/bitbucket-pipelines.yml",
+            "/phpstan.neon",
+            "/phpcs.xml",
+            "/phpmd.xml",
+            "/phpunit.xml",
+            "/grumphp.yml",
+            "/pdepend.xml"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
