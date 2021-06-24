@@ -1,0 +1,145 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "list-transformer",
+  "identifier": "netsuite-currency-shipping-dictionary",
+  "name": "Netsuite Currency and Shipping Dictionary",
+  "object": {
+    "prototype": "chain",
+    "parameters": {
+      "transformers": [
+        {
+          "prototype": "data",
+          "parameters": {
+            "transformers": [
+              {
+                "prototype": "value-mapper",
+                "parameters": {
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": {
+                      "pattern": "%{path_currency}"
+                    }
+                  },
+                  "mappers": [
+                    {
+                      "prototype": "dictionary-map",
+                      "parameters": {
+                        "map": "%{currency_map}",
+                        "comparator": "equals-adaptive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "prototype": "data",
+          "parameters": {
+            "transformers": [
+              {
+                "prototype": "value-mapper",
+                "parameters": {
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": {
+                      "pattern": "%{path_shipping}"
+                    }
+                  },
+                  "mappers": [
+                    {
+                      "prototype": "dictionary-map",
+                      "parameters": {
+                        "map": "%{shipping_map}",
+                        "comparator": "equals-adaptive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "schema": {
+    "properties": {
+      "path_currency": {
+        "type": "string",
+        "title": "Path",
+        "default":"currency.id"
+      },
+      "currency_map": {
+        "type": "array",
+        "title": "Currency Map",
+        "default": [
+          ["GBP", "1"]
+        ],
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "title": "string"
+              },
+              {
+                "type": "number",
+                "title": "number"
+              },
+              {
+                "type": "boolean",
+                "title": "boolean"
+              },
+              {
+                "type": "null",
+                "title": "null"
+              }
+            ]
+          }
+        }
+      },
+      "path_shipping": {
+        "type": "string",
+        "title": "Path",
+        "default":"shipMethod.id"
+      },
+      "shipping_map": {
+        "type": "array",
+        "title": "Shipping Map",
+        "default": [
+          ["ParcelForce", "10"]
+        ],
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "title": "string"
+              },
+              {
+                "type": "number",
+                "title": "number"
+              },
+              {
+                "type": "boolean",
+                "title": "boolean"
+              },
+              {
+                "type": "null",
+                "title": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

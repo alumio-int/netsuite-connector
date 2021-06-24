@@ -244,7 +244,7 @@
                 "prototype": "pattern-copy",
                 "parameters": {
                   "pattern": "partofInvoice.0.totalPaymentDue",
-                  "replacement": "result.items.shippingCost"
+                  "replacement": "result.shippingCost"
                 }
               }
             ]
@@ -498,6 +498,13 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "prototype": "brancher",
+          "parameters": {
+            "pattern": "result",
+            "entityType": "netsuite-order"
           }
         }
       ]
