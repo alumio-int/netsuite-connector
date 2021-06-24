@@ -1,0 +1,31 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "publisher",
+  "identifier": "netsuite-sales-order-create",
+  "name": "Netsuite - Sales Order - Create",
+  "object": {
+    "prototype": "http-publisher",
+    "parameters": {
+      "request": {
+        "uri": "/record/v1/salesOrder",
+        "method": "post",
+        "payload": "&{@}"
+      },
+      "client": "%{client}"
+    }
+  },
+  "schema": {
+    "properties": {
+      "client": {
+        "title": "HTTP Client",
+        "default": "default",
+        "magement": {
+          "type": "http-client"
+        }
+      }
+    },
+    "required": [
+      "client"
+    ]
+  }
+}
