@@ -18,9 +18,9 @@
     "properties": {
       "client": {
         "title": "HTTP Client",
-        "default": "default",
-        "magement": {
-          "type": "http-client"
+        "ui": {
+          "di:type": "http-client",
+          "ui:placeholder": "Default client"
         }
       }
     },
