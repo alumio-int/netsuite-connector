@@ -1,0 +1,56 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "list-transformer",
+  "identifier": "netsuite-getting-customer-id",
+  "name": "Netsuite Getting Customer Id",
+  "description": "Getting Existed Customer Id in Netsuite",
+  "object": {
+    "prototype": "chain",
+    "parameters": {
+      "transformers": [
+        {
+          "prototype": "data",
+          "parameters": {
+            "transformers": [
+              {
+                "prototype": "merger",
+                "parameters": {
+                  "template": {
+                    "netsuite": {
+                      "customer_id": "&{[items[0].id]}"
+                    }
+                  },
+                  "transformer": {
+                    "prototype": "http-transformer",
+                    "parameters": {
+                      "client": "%{client}",
+                      "request": {
+                        "uri": "/record/v1/customer?q=email IS \"&{customer.email}\"",
+                        "method": "get",
+                        "payloadType": "data"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "schema": {
+    "properties": {
+      "client": {
+        "title": "HTTP Client",
+        "ui": {
+          "di:type": "http-client",
+          "ui:placeholder": "Default client"
+        }
+      }
+    },
+    "required": [
+      "client"
+    ]
+  }
+}

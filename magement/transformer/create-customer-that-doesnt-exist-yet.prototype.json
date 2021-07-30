@@ -1,0 +1,140 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "list-transformer",
+  "identifier": "netsuite-create-customer-that-doesnt-exist-yet",
+  "name": "Netsuite Create customer that doesn't exist yet",
+  "description": "Create customer that doesn't exist yet in Netsuite",
+  "object": {
+    "prototype": "chain",
+    "parameters": {
+      "transformers": [
+        {
+          "prototype": "data",
+          "parameters": {
+            "transformers": [
+              {
+                "prototype": "conditional",
+                "parameters": {
+                  "filters": [
+                    {
+                      "prototype": "value-condition",
+                      "parameters": {
+                        "accessor": {
+                          "prototype": "pattern",
+                          "parameters": {
+                            "pattern": "netsuite.customer_id.0"
+                          }
+                        },
+                        "conditions": [
+                          {
+                            "prototype": "equals-adaptive",
+                            "parameters": {
+                              "value": null
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "transformers": [
+                    {
+                      "prototype": "merger",
+                      "parameters": {
+                        "template": {
+                          "response": "&{@}"
+                        },
+                        "transformer": {
+                          "prototype": "http-transformer",
+                          "parameters": {
+                            "client": "%{client}",
+                            "request": {
+                              "uri": "/record/v1/customer",
+                              "method": "post",
+                              "payload": {
+                                "email": "&{customer.email}",
+                                "entityid": "New Customer",
+                                "lastname": "&{billingAddress.lastname}",
+                                "firstname": "&{billingAddress.firstname}",
+                                "addressbook": {
+                                  "items": [
+                                    {
+                                      "label": "Billing Address",
+                                      "addressbookaddress": {
+                                        "zip": "&{billingAddress.postalCode}",
+                                        "country": "&{billingAddress.addressCountry}",
+                                        "addressee": "&{billingAddress.firstname} &{billingAddress.lastname}"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "payloadType": "data"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "prototype": "merger",
+                      "parameters": {
+                        "template": {
+                          "customer_id": "&{[items[0].id]}"
+                        },
+                        "transformer": {
+                          "prototype": "http-transformer",
+                          "parameters": {
+                            "client": "%{client}",
+                            "request": {
+                              "uri": "/record/v1/customer?q=email IS \"&{customer.email}\"",
+                              "method": "get",
+                              "payload": "&{@}",
+                              "payloadType": "data"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "prototype": "pattern-move",
+                      "parameters": {
+                        "pattern": "customer_id",
+                        "replacement": "netsuite.customer_id"
+                      }
+                    },
+                    {
+                      "prototype": "key-filter",
+                      "parameters": {
+                        "accessor": {
+                          "prototype": "key",
+                          "parameters": {
+                            "keys": [
+                              "response"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "schema": {
+    "properties": {
+      "client": {
+        "title": "HTTP Client",
+        "ui": {
+          "di:type": "http-client",
+          "ui:placeholder": "Default client"
+        }
+      }
+    },
+    "required": [
+      "client"
+    ]
+  }
+}

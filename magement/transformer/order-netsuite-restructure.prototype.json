@@ -11,32 +11,6 @@
         {
           "prototype": "data",
           "parameters": {
-            "filters": [
-              {
-                "prototype": "value-condition",
-                "parameters": {
-                  "accessor": {
-                    "prototype": "pattern",
-                    "parameters": {
-                      "pattern": "orderStatus.status"
-                    }
-                  },
-                  "conditions": [
-                    {
-                      "prototype": "equals",
-                      "parameters": {
-                        "value": "%{status}"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "prototype": "data",
-          "parameters": {
             "transformers": [
               {
                 "prototype": "list-mapper",
@@ -384,117 +358,10 @@
           "parameters": {
             "transformers": [
               {
-                "prototype": "merger",
-                "parameters": {
-                  "template": {
-                    "customer_id": "&{[items[0].id]}"
-                  },
-                  "transformer": {
-                    "prototype": "http-transformer",
-                    "parameters": {
-                      "client": "%{client}",
-                      "request": {
-                        "uri": "/record/v1/customer?q=email IS \"&{customer.email}\"",
-                        "method": "get"
-                      }
-                    }
-                  }
-                }
-              },
-              {
                 "prototype": "pattern-copy",
                 "parameters": {
-                  "pattern": "customer_id.0",
+                  "pattern": "netsuite.customer_id.0",
                   "replacement": "result.entity.id"
-                }
-              },
-              {
-                "prototype": "conditional",
-                "parameters": {
-                  "filters": [
-                    {
-                      "prototype": "value-condition",
-                      "parameters": {
-                        "accessor": {
-                          "prototype": "pattern",
-                          "parameters": {
-                            "pattern": "customer_id.0"
-                          }
-                        },
-                        "conditions": [
-                          {
-                            "prototype": "equals-adaptive",
-                            "parameters": {
-                              "value": null
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ],
-                  "transformers": [
-                    {
-                      "prototype": "merger",
-                      "parameters": {
-                        "template": {
-                          "response": "&{@}"
-                        },
-                        "transformer": {
-                          "prototype": "http-transformer",
-                          "parameters": {
-                            "client": "%{client}",
-                            "request": {
-                              "uri": "/record/v1/customer",
-                              "method": "post",
-                              "payload": {
-                                "email": "&{customer.email}",
-                                "entityid": "New Customer",
-                                "lastname": "&{billingAddress.lastname}",
-                                "firstname": "&{billingAddress.firstname}",
-                                "addressbook": {
-                                  "items": [
-                                    {
-                                      "label": "Billing Address",
-                                      "addressbookaddress": {
-                                        "zip": "&{billingAddress.postalCode}",
-                                        "country": "&{billingAddress.addressCountry}",
-                                        "addressee": "&{billingAddress.firstname} &{billingAddress.lastname}"
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "prototype": "merger",
-                      "parameters": {
-                        "template": {
-                          "customer_id": "&{[items[0].id]}"
-                        },
-                        "transformer": {
-                          "prototype": "http-transformer",
-                          "parameters": {
-                            "client": "%{client}",
-                            "request": {
-                              "uri": "/record/v1/customer?q=email IS \"&{customer.email}\"",
-                              "method": "get"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "prototype": "pattern-copy",
-                      "parameters": {
-                        "pattern": "customer_id.0",
-                        "replacement": "result.entity.id"
-                      }
-                    }
-                  ]
                 }
               }
             ]
@@ -518,16 +385,10 @@
           "di:type": "http-client",
           "ui:placeholder": "Default client"
         }
-      },
-      "status": {
-        "type": "string",
-        "title": "Status",
-        "default": "processing"
       }
     },
     "required": [
-      "client",
-      "status"
+      "client"
     ]
   }
 }

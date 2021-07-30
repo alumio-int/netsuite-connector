@@ -1,0 +1,51 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "list-transformer",
+  "identifier": "filter-order-by-status",
+  "name": "Filter Order By Status",
+  "object": {
+    "prototype": "chain",
+    "parameters": {
+      "transformers": [
+        {
+          "prototype": "data",
+          "parameters": {
+            "filters": [
+              {
+                "prototype": "value-condition",
+                "parameters": {
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": {
+                      "pattern": "orderStatus.status"
+                    }
+                  },
+                  "conditions": [
+                    {
+                      "prototype": "equals",
+                      "parameters": {
+                        "value": "%{status}"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "schema": {
+    "properties": {
+      "status": {
+        "type": "string",
+        "title": "Status",
+        "default": "processing"
+      }
+    },
+    "required": [
+      "status"
+    ]
+  }
+}

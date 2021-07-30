@@ -1,0 +1,78 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "list-transformer",
+  "identifier": "netsuite-shipping-dictionary",
+  "name": "Netsuite Shipping Dictionary",
+  "object": {
+    "prototype": "chain",
+    "parameters": {
+      "transformers": [
+        {
+          "prototype": "data",
+          "parameters": {
+            "transformers": [
+              {
+                "prototype": "value-mapper",
+                "parameters": {
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": {
+                      "pattern": "%{pathShipping}"
+                    }
+                  },
+                  "mappers": [
+                    {
+                      "prototype": "dictionary-map",
+                      "parameters": {
+                        "map": "%{shippingMap}",
+                        "comparator": "equals-adaptive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "schema": {
+    "properties": {
+      "pathShipping": {
+        "type": "string",
+        "title": "Path Shipping",
+        "default":"shipMethod.id",
+        "ui": {
+          "ui:help": "Path of shipping that will be mapped"
+        }
+      },
+      "shippingMap": {
+        "type": "array",
+        "title": "Shipping Mapping",
+        "ui": {
+          "ui:addRowTitle": "Add a mapping"
+        },
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "title": "Shipping code",
+              "ui": {
+                "ui:help": "Example: `ParcelForce`"
+              }
+            },
+            "identifier": {
+              "type": "integer",
+              "title": "Currency identifier in Netsuite",
+              "ui": {
+                "ui:help": "Example: `10`"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

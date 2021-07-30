@@ -1,0 +1,78 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "list-transformer",
+  "identifier": "netsuite-currency-dictionary",
+  "name": "Netsuite Currency Dictionary",
+  "object": {
+    "prototype": "chain",
+    "parameters": {
+      "transformers": [
+        {
+          "prototype": "data",
+          "parameters": {
+            "transformers": [
+              {
+                "prototype": "value-mapper",
+                "parameters": {
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": {
+                      "pattern": "%{pathCurrency}"
+                    }
+                  },
+                  "mappers": [
+                    {
+                      "prototype": "dictionary-map",
+                      "parameters": {
+                        "map": "%{currencyMap[*].[code, identifier]}",
+                        "comparator": "equals-adaptive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "schema": {
+    "properties": {
+      "pathCurrency": {
+        "type": "string",
+        "title": "Path Currency",
+        "default":"currency.id",
+        "ui": {
+          "ui:help": "Path of currency that will be mapped"
+        }
+      },
+      "currencyMap": {
+        "type": "array",
+        "title": "Currency Mapping",
+        "ui": {
+          "ui:addRowTitle": "Add a mapping"
+        },
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "title": "Currency code",
+              "ui": {
+                "ui:help": "Example: `GBP`"
+              }
+            },
+            "identifier": {
+              "type": "integer",
+              "title": "Currency identifier in Netsuite",
+              "ui": {
+                "ui:help": "Example: `1`"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

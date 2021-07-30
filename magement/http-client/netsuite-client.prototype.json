@@ -1,0 +1,55 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "http-client",
+  "identifier": "netsuite-http-client",
+  "name": "Netsuite Client",
+  "object": {
+    "class": "Http\\Client\\Common\\PluginClient",
+    "arguments": {
+      "plugins": [
+        {
+          "prototype": "base-uri",
+          "parameters": {
+            "uri": {
+              "parameters": "%{baseUrl}"
+            },
+            "options": []
+          }
+        },
+        {
+          "prototype": "logger",
+          "parameters": {
+            "formatter": "full"
+          }
+        },
+        {
+          "prototype": "content-type"
+        }
+      ],
+      "authentications": "%{authentication}"
+    },
+    "meta": {
+      "client": {
+        "type": "Psr\\Http\\Client\\ClientInterface"
+      },
+      "plugins": {
+        "type": "Http\\Client\\Common\\Plugin[]"
+      }
+    }
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "baseUrl": {
+        "type": "string",
+        "title": "Netsuite Base URL"
+      },
+      "authentication": {
+        "title": "Authentication",
+        "ui": {
+          "di:type": "http-authentication"
+        }
+      }
+    }
+  }
+}
