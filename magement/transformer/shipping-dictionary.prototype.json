@@ -24,7 +24,7 @@
                     {
                       "prototype": "dictionary-map",
                       "parameters": {
-                        "map": "%{shippingMap}",
+                        "map": "%{shippingMap[*].[code, identifier]}",
                         "comparator": "equals-adaptive"
                       }
                     }
