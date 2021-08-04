@@ -24,9 +24,14 @@
         },
         {
           "prototype": "content-type"
+        },
+        {
+          "class": "Http\\Client\\Common\\Plugin\\AuthenticationPlugin",
+          "arguments": {
+            "authentication":"%{authentication}"
+          }
         }
-      ],
-      "authentications": "%{authentication}"
+      ]
     },
     "meta": {
       "client": {
