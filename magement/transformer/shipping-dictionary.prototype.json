@@ -65,7 +65,7 @@
             },
             "identifier": {
               "type": "integer",
-              "title": "Currency identifier in Netsuite",
+              "title": "Shipping identifier in Netsuite",
               "ui": {
                 "ui:help": "Example: `10`"
               }

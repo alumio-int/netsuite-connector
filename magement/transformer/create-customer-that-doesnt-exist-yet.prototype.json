@@ -87,7 +87,6 @@
                             "request": {
                               "uri": "/record/v1/customer?q=email IS \"&{customer.email}\"",
                               "method": "get",
-                              "payload": "&{@}",
                               "payloadType": "data"
                             }
                           }
