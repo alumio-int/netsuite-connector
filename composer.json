@@ -1,5 +1,5 @@
 {
-    "name": "alumio/netsuite-connector",
+    "name": "alumio/netsuite-connector-bitbucket",
     "description": "Connect to NetSuite in Alumio",
     "type": "library",
     "license": "proprietary",
