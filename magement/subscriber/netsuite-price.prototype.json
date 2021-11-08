@@ -1,0 +1,138 @@
+{
+    "$schema": "https://di.schema.mediact.com/register.prototype.json",
+    "type": "incoming-configuration",
+    "identifier": "netsuite-price-retrieve",
+    "name": "Netsuite - Price - Retrieve",
+    "description": null,
+    "object": {
+      "parameters": {
+        "subscriber": {
+          "prototype": "http-subscriber",
+          "parameters": {
+            "client": "%{client}",
+            "request": {
+              "uri": "/query/v1/suiteql?limit=&{limit}&offset=&{offset}",
+              "method": "post",
+              "payload": {
+                "q": "SELECT i.id, i.itemid, m.*, i.lastmodifieddate FROM item i JOIN itemprice m ON i.id = m.item ORDER BY i.id ASC"
+              },
+              "payloadType": "data"
+            },
+            "transformer": {
+              "prototype": "chain",
+              "parameters": {
+                "transformers": [
+                  {
+                    "prototype": "storage-get",
+                    "parameters": {
+                      "storage": "netsuite-price-last-page-tracker",
+                      "storagePath": "filter",
+                      "destinationPath": "filter"
+                    }
+                  },
+                  {
+                    "prototype": "conditional",
+                    "parameters": {
+                      "filters": [
+                        {
+                          "prototype": "value-condition",
+                          "parameters": {
+                            "accessor": {
+                              "prototype": "pattern",
+                              "parameters": {
+                                "pattern": "filter"
+                              }
+                            },
+                            "conditions": [
+                              {
+                                "prototype": "equals-adaptive",
+                                "parameters": {
+                                  "value": null
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "transformers": [
+                        {
+                          "prototype": "value-setter",
+                          "parameters": {
+                            "configurations": [
+                              {
+                                "key": "filter.offset",
+                                "value": 0
+                              },
+                              {
+                                "key": "filter.limit",
+                                "value": 200
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "prototype": "list-mapper",
+                    "parameters": {
+                      "mappers": [
+                        {
+                          "prototype": "list-extend-with",
+                          "parameters": {
+                            "array": {
+                              "limit": "&{filter.limit}",
+                              "offset": "&{filter.offset}"
+                            }
+                          }
+                        }
+                      ],
+                      "accessor": {
+                        "prototype": "pattern",
+                        "parameters": []
+                      }
+                    }
+                  },
+                  {
+                    "prototype": "key-filter",
+                    "parameters": {
+                      "accessor": {
+                        "prototype": "key",
+                        "parameters": {
+                          "keys": [
+                            "filter"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "transformers": []
+      }
+    },
+    "schema": {
+        "properties": {
+          "client": {
+            "title": "HTTP Client",
+            "ui": {
+              "di:type": "http-client",
+              "ui:placeholder": "Default client"
+            }
+          },
+          "pagination_storage": {
+            "title": "Pagination Tracker Storage",
+            "magement": {
+              "type": "storage"
+            }
+          }
+        },
+        "required": [
+          "client",
+          "pagination_storage"
+        ]
+      }
+  }
