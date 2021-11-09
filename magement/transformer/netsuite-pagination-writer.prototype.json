@@ -1,0 +1,137 @@
+{
+    "$schema": "https://di.schema.mediact.com/register.prototype.json",
+    "type": "list-transformer",
+    "identifier": "netsuite-pagination-writer",
+    "name": "Netsuite Pagination Writer",
+    "object": {
+      "prototype": "chain",
+      "parameters": {
+        "transformers": [
+          {
+            "prototype": "data",
+            "parameters": {
+              "transformers": [
+                {
+                  "prototype": "storage-get",
+                  "parameters": {
+                    "storage": "%{pagination_storage}",
+                    "storagePath": "filter",
+                    "destinationPath": "last_filter"
+                  }
+                },
+                {
+                  "prototype": "conditional",
+                  "parameters": {
+                    "filters": [
+                      {
+                        "prototype": "value-condition",
+                        "parameters": {
+                          "accessor": {
+                            "prototype": "pattern",
+                            "parameters": {
+                              "pattern": "last_filter"
+                            }
+                          },
+                          "conditions": [
+                            {
+                              "prototype": "empty"
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "transformers": [
+                      {
+                        "prototype": "value-setter",
+                        "parameters": {
+                          "configurations": [
+                            {
+                              "key": "last_filter.offset",
+                              "value": 0
+                            },
+                            {
+                              "key": "last_filter.limit",
+                              "value": "%{limit}"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "prototype": "pattern-copy",
+                  "parameters": {
+                    "pattern": "last_filter.offset",
+                    "replacement": "offsetTemp.0"
+                  }
+                },
+                {
+                  "prototype": "value-setter",
+                  "parameters": {
+                    "configurations": [
+                      {
+                        "key": "offsetTemp.1",
+                        "value": "&{count}"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "prototype": "value-mapper",
+                  "parameters": {
+                    "mappers": [
+                      {
+                        "prototype": "operator",
+                        "parameters": {
+                          "operator": "addition"
+                        }
+                      }
+                    ],
+                    "accessor": {
+                      "prototype": "pattern",
+                      "parameters": {
+                        "pattern": "offsetTemp"
+                      }
+                    }
+                  }
+                },
+                {
+                  "prototype": "pattern-move",
+                  "parameters": {
+                    "pattern": "offsetTemp",
+                    "replacement": "last_filter.offset"
+                  }
+                },
+                {
+                  "prototype": "storage-set",
+                  "parameters": {
+                    "storage": "%pagination_storage",
+                    "sourcePath": "last_filter",
+                    "storagePath": "filter"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "schema": {
+        "properties": {
+          "pagination_storage": {
+            "title": "Storage to track progress",
+            "magement": {
+              "type": "storage"
+            }
+          },
+          "limit": {
+            "title": "Items to read",
+            "type": "number",
+            "ui": {
+              "ui:placeholder": "1000"
+            }
+          }
+        }
+    }
+  }
