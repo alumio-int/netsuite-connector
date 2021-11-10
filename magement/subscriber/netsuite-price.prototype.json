@@ -1,81 +1,68 @@
 {
-    "$schema": "https://di.schema.mediact.com/register.prototype.json",
-    "type": "incoming-configuration",
-    "identifier": "netsuite-price-retrieve",
-    "name": "Netsuite - Price - Retrieve",
-    "object": {
-      "parameters": {
-        "subscriber": {
-          "prototype": "http-subscriber",
-          "parameters": {
-            "client": "%{client}",
-            "request": {
-              "uri": "/query/v1/suiteql?limit=&{limit}&offset=&{offset}",
-              "method": "post",
-              "payload": {
-                "q": "SELECT i.id, i.itemid, m.*, i.lastmodifieddate FROM item i JOIN itemprice m ON i.id = m.item WHERE pricelevelname = \"%{pricetype}\" ORDER BY i.id ASC"
-              },
-              "payloadType": "data"
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "incoming-configuration",
+  "identifier": "netsuite-price-retrieve",
+  "name": "Netsuite - Price - Retrieve",
+  "object": {
+    "prototype": "http-subscriber",
+    "parameters": {
+        "client": "%{client}",
+        "request": {
+            "uri": "/query/v1/suiteql?limit=&{limit}&offset=&{offset}",
+            "method": "post",
+            "payload": {
+              "q": "SELECT i.id, i.itemid, m.*, i.lastmodifieddate FROM item i JOIN itemprice m ON i.id = m.item WHERE pricelevelname = '%{pricetype}' ORDER BY i.id ASC"
             },
-            "transformer": {
-              "prototype": "netsuite-pagination-reader",
-              "parameters": {
-                  "limit": "%{limit}",
-                  "pagination_storage": "%{pagination_storage}"
-              }
-            }
-          }
+            "payloadType": "data"
         },
-        "transformers": [
-          {
-            "prototype": "netsuite-pagination-writer",
+        "transformer": {
+            "prototype": "netsuite-pagination-reader",
             "parameters": {
                 "limit": "%{limit}",
                 "pagination_storage": "%{pagination_storage}"
             }
-          }
-        ]
-      }
-    },
-    "schema": {
-      "properties": {
-        "client": {
-          "title": "Client",
-          "ui": {
-            "di:type": "http-client",
-            "ui:placeholder": "Default client"
-          }
-        },
-        "pagination_storage": {
-          "title": "Storage to track progress",
-          "magement": {
-            "type": "storage"
-          }
-        },
-        "limit": {
-          "title": "Items to read",
-          "type": "number",
-          "default": 1000
-        },
-        "pricetype": {
-          "title": "Type of price",
-          "type": "string",
-          "enum": [
-            "B2C (Base Price)",
-            "B2B"
-          ],
-          "enumNames": [
-            "B2C (Base Price)",
-            "B2B"
-          ],
-          "default": "B2C (Base Price)"
+        }
+    }
+  },
+  "schema": {
+    "properties": {
+      "client": {
+        "title": "Client",
+        "ui": {
+          "di:type": "http-client",
+          "ui:placeholder": "Default client"
         }
       },
-      "required": [
-        "client",
-        "pagination_storage",
-        "pricetype",
-        "limit"
-      ]
-    }
+      "pagination_storage": {
+        "title": "Storage to track progress",
+        "magement": {
+          "type": "storage"
+        }
+      },
+      "limit": {
+        "title": "Items to read",
+        "type": "number",
+        "default": 1000
+      },
+      "pricetype": {
+        "title": "Type of price",
+        "type": "string",
+        "enum": [
+          "B2C (Base Price)",
+          "B2B"
+        ],
+        "enumNames": [
+          "B2C (Base Price)",
+          "B2B"
+        ],
+        "default": "B2C (Base Price)"
+      }
+    },
+    "required": [
+      "client",
+      "pagination_storage",
+      "pricetype",
+      "limit"
+    ]
   }
+}

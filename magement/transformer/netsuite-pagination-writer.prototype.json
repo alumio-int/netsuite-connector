@@ -106,7 +106,7 @@
                 {
                   "prototype": "storage-set",
                   "parameters": {
-                    "storage": "%pagination_storage",
+                    "storage": "%{pagination_storage}",
                     "sourcePath": "last_filter",
                     "storagePath": "filter"
                   }
