@@ -1,6 +1,6 @@
 {
   "$schema": "https://di.schema.mediact.com/register.prototype.json",
-  "type": "incoming-configuration",
+  "type": "subscriber",
   "identifier": "netsuite-price-retrieve",
   "name": "Netsuite - Price - Retrieve",
   "object": {
