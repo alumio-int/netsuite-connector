@@ -11,7 +11,7 @@
             "uri": "/query/v1/suiteql?limit=&{limit}&offset=&{offset}",
             "method": "post",
             "payload": {
-              "q": "SELECT i.id, i.itemid, m.*, i.lastmodifieddate FROM item i JOIN itemprice m ON i.id = m.item WHERE pricelevelname = '%{pricetype}' ORDER BY i.id ASC"
+              "q": "SELECT i.id, i.itemid, m.price, m.pricelevelname, c.symbol as currency, i.lastmodifieddate FROM item i JOIN itemprice m ON i.id = m.item JOIN currency c ON c.id = m.currencypage WHERE pricelevelname = '%{pricetype}' ORDER BY i.id ASC"
             },
             "payloadType": "data"
         },

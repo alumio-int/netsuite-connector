@@ -1,0 +1,15 @@
+{
+    "$schema": "https://di.schema.mediact.com/register.configuration.json",
+    "type": "entity",
+    "identifier": "netsuite-product-price",
+    "name": "NetSuite Product Price",
+    "description": null,
+    "object": {
+      "parameters": {
+        "schema": [],
+        "identifierPath": [
+          "id"
+        ]
+      }
+    }
+}

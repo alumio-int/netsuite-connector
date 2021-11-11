@@ -1,0 +1,46 @@
+{
+    "$schema": "https://di.schema.mediact.com/register.configuration.json",
+    "type": "list-transformer",
+    "identifier": "netsuite-price-update-restructure",
+    "name": "Netsuite - Product Price Update Restructure",
+    "object": {
+      "prototype": "chain",
+      "parameters": {
+        "transformers": [
+          {
+            "prototype": "node",
+            "parameters": {
+              "accessor": {
+                "prototype": "pattern",
+                "parameters": {
+                  "pattern": "items.*"
+                }
+              },
+              "nodeTransformers": [
+                {
+                  "prototype": "key-filter",
+                  "parameters": {
+                    "accessor": {
+                      "prototype": "key",
+                      "parameters": {
+                        "keys": [
+                          "links",
+                          "lastmodifieddate"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "prototype": "brancher",
+            "parameters": {
+              "pattern": "items.*"
+            }
+          }
+        ]
+      }
+    }
+  }

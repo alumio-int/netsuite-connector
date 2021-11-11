@@ -24,7 +24,7 @@
                   "parameters": {
                     "filters": [
                       {
-                        "prototype": "value-condition",
+                        "prototype": "value-condition-v2",
                         "parameters": {
                           "accessor": {
                             "prototype": "pattern",
@@ -42,18 +42,25 @@
                     ],
                     "transformers": [
                       {
-                        "prototype": "value-setter",
+                        "prototype": "list-mapper",
                         "parameters": {
-                          "configurations": [
+                          "mappers": [
                             {
-                              "key": "last_filter.offset",
-                              "value": 0
-                            },
-                            {
-                              "key": "last_filter.limit",
-                              "value": "%{limit}"
+                              "prototype": "list-extend-with",
+                              "parameters": {
+                                "array": {
+                                  "last_filter": {
+                                    "limit": "&{count}",
+                                    "offset": "&{offset}"
+                                  }
+                                }
+                              }
                             }
-                          ]
+                          ],
+                          "accessor": {
+                            "prototype": "pattern",
+                            "parameters": []
+                          }
                         }
                       }
                     ]
@@ -123,13 +130,6 @@
             "title": "Storage to track progress",
             "magement": {
               "type": "storage"
-            }
-          },
-          "limit": {
-            "title": "Items to read",
-            "type": "number",
-            "ui": {
-              "ui:placeholder": "1000"
             }
           }
         }
