@@ -20,94 +20,51 @@
                   }
                 },
                 {
-                  "prototype": "conditional",
-                  "parameters": {
-                    "filters": [
-                      {
-                        "prototype": "value-condition-v2",
-                        "parameters": {
-                          "accessor": {
-                            "prototype": "pattern",
-                            "parameters": {
-                              "pattern": "last_filter"
-                            }
-                          },
-                          "conditions": [
-                            {
-                              "prototype": "empty"
-                            }
-                          ]
-                        }
-                      }
-                    ],
-                    "transformers": [
-                      {
-                        "prototype": "list-mapper",
-                        "parameters": {
-                          "mappers": [
-                            {
-                              "prototype": "list-extend-with",
-                              "parameters": {
-                                "array": {
-                                  "last_filter": {
-                                    "limit": "&{count}",
-                                    "offset": "&{offset}"
-                                  }
-                                }
-                              }
-                            }
-                          ],
-                          "accessor": {
-                            "prototype": "pattern",
-                            "parameters": []
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "prototype": "pattern-copy",
-                  "parameters": {
-                    "pattern": "last_filter.offset",
-                    "replacement": "offsetTemp.0"
-                  }
-                },
-                {
-                  "prototype": "value-setter",
-                  "parameters": {
-                    "configurations": [
-                      {
-                        "key": "offsetTemp.1",
-                        "value": "&{count}"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "prototype": "value-mapper",
+                  "prototype": "list-mapper",
                   "parameters": {
                     "mappers": [
                       {
-                        "prototype": "operator",
+                        "prototype": "list-extend-with",
                         "parameters": {
-                          "operator": "addition"
+                          "array": {
+                            "last_items": "&{items[-1:]}"
+                          }
                         }
                       }
                     ],
                     "accessor": {
                       "prototype": "pattern",
-                      "parameters": {
-                        "pattern": "offsetTemp"
-                      }
+                      "parameters": []
                     }
                   }
                 },
                 {
                   "prototype": "pattern-move",
                   "parameters": {
-                    "pattern": "offsetTemp",
-                    "replacement": "last_filter.offset"
+                    "pattern": "last_items.0.id",
+                    "replacement": "last_items"
+                  }
+                },
+                {
+                  "prototype": "list-mapper",
+                  "parameters": {
+                    "mappers": [
+                      {
+                        "prototype": "list-extend-with",
+                        "parameters": {
+                          "array": {
+                            "last_filter": {
+                              "limit": "&{count}",
+                              "last_id": "&{last_items}"
+                            }
+                          }
+                        }
+                      }
+                    ],
+                    "accessor": {
+                      "prototype": "pattern",
+                      "parameters": []
+                    }
                   }
                 },
                 {

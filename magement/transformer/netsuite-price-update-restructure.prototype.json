@@ -1,5 +1,5 @@
 {
-    "$schema": "https://di.schema.mediact.com/register.configuration.json",
+    "$schema": "https://di.schema.mediact.com/register.prototype.json",
     "type": "list-transformer",
     "identifier": "netsuite-price-update-restructure",
     "name": "Netsuite - Product Price Update Restructure",
@@ -37,7 +37,8 @@
           {
             "prototype": "brancher",
             "parameters": {
-              "pattern": "items.*"
+              "pattern": "items.*",
+              "entityType": "netsuite-product-price"
             }
           }
         ]

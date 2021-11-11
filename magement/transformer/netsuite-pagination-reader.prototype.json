@@ -3,7 +3,6 @@
     "type": "transformer",
     "identifier": "netsuite-pagination-reader",
     "name": "Netsuite Pagination Reader",
-    "description": null,
     "object": {
         "prototype": "chain",
         "parameters": {
@@ -46,12 +45,12 @@
                       "parameters": {
                         "configurations": [
                           {
-                            "key": "filter.offset",
-                            "value": 0
-                          },
-                          {
                             "key": "filter.limit",
                             "value": "%{limit}"
+                          },
+                          {
+                            "key": "filter.last_id",
+                            "value": 1
                           }
                         ]
                       }
@@ -67,8 +66,8 @@
                       "prototype": "list-extend-with",
                       "parameters": {
                         "array": {
-                          "limit": "%{limit}",
-                          "offset": "&{filter.offset}"
+                          "limit": "&{filter.limit}",
+                          "last_id": "&{filter.last_id}"
                         }
                       }
                     }
