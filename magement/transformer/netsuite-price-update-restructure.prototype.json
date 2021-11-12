@@ -30,6 +30,41 @@
                       }
                     }
                   }
+                },
+                {
+                  "prototype": "key-mapper",
+                  "parameters": {
+                    "mappers": [
+                      {
+                        "prototype": "dictionary-map",
+                        "parameters": {
+                          "map": [
+                            [
+                              "id",
+                              "identifier"
+                            ],
+                            [
+                              "itemid",
+                              "sku"
+                            ],
+                            [
+                              "pricelevelname",
+                              "description"
+                            ],
+                            [
+                              "currency",
+                              "priceCurrency"
+                            ]
+                          ],
+                          "comparator": "equals"
+                        }
+                      }
+                    ],
+                    "accessor": {
+                      "prototype": "pattern",
+                      "parameters": []
+                    }
+                  }
                 }
               ]
             }
