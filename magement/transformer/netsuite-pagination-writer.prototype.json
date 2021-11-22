@@ -1,0 +1,94 @@
+{
+    "$schema": "https://di.schema.mediact.com/register.prototype.json",
+    "type": "list-transformer",
+    "identifier": "netsuite-pagination-writer",
+    "name": "Netsuite Pagination Writer",
+    "object": {
+      "prototype": "chain",
+      "parameters": {
+        "transformers": [
+          {
+            "prototype": "data",
+            "parameters": {
+              "transformers": [
+                {
+                  "prototype": "storage-get",
+                  "parameters": {
+                    "storage": "%{pagination_storage}",
+                    "storagePath": "filter",
+                    "destinationPath": "last_filter"
+                  }
+                },
+                {
+                  "prototype": "list-mapper",
+                  "parameters": {
+                    "mappers": [
+                      {
+                        "prototype": "list-extend-with",
+                        "parameters": {
+                          "array": {
+                            "last_items": "&{items[-1:]}"
+                          }
+                        }
+                      }
+                    ],
+                    "accessor": {
+                      "prototype": "pattern",
+                      "parameters": []
+                    }
+                  }
+                },
+                {
+                  "prototype": "pattern-move",
+                  "parameters": {
+                    "pattern": "last_items.0.id",
+                    "replacement": "last_items"
+                  }
+                },
+                {
+                  "prototype": "list-mapper",
+                  "parameters": {
+                    "mappers": [
+                      {
+                        "prototype": "list-extend-with",
+                        "parameters": {
+                          "array": {
+                            "last_filter": {
+                              "limit": "&{count}",
+                              "last_id": "&{last_items}"
+                            }
+                          }
+                        }
+                      }
+                    ],
+                    "accessor": {
+                      "prototype": "pattern",
+                      "parameters": []
+                    }
+                  }
+                },
+                {
+                  "prototype": "storage-set",
+                  "parameters": {
+                    "storage": "%{pagination_storage}",
+                    "sourcePath": "last_filter",
+                    "storagePath": "filter"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "schema": {
+        "properties": {
+          "pagination_storage": {
+            "title": "Storage to track progress",
+            "magement": {
+              "type": "storage"
+            }
+          }
+        }
+    }
+  }

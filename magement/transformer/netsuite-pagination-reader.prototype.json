@@ -1,0 +1,117 @@
+{
+    "$schema": "https:\/\/di.schema.mediact.com\/register.prototype.json",
+    "type": "transformer",
+    "identifier": "netsuite-pagination-reader",
+    "name": "Netsuite Pagination Reader",
+    "object": {
+        "prototype": "chain",
+        "parameters": {
+            "transformers": [
+              {
+                "prototype": "storage-get",
+                "parameters": {
+                  "storage": "%{pagination_storage}",
+                  "storagePath": "filter",
+                  "destinationPath": "filter"
+                }
+              },
+              {
+                "prototype": "conditional",
+                "parameters": {
+                  "filters": [
+                    {
+                      "prototype": "value-condition",
+                      "parameters": {
+                        "accessor": {
+                          "prototype": "pattern",
+                          "parameters": {
+                            "pattern": "filter"
+                          }
+                        },
+                        "conditions": [
+                          {
+                            "prototype": "equals-adaptive",
+                            "parameters": {
+                              "value": null
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "transformers": [
+                    {
+                      "prototype": "value-setter",
+                      "parameters": {
+                        "configurations": [
+                          {
+                            "key": "filter.limit",
+                            "value": "%{limit}"
+                          },
+                          {
+                            "key": "filter.last_id",
+                            "value": 1
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "prototype": "list-mapper",
+                "parameters": {
+                  "mappers": [
+                    {
+                      "prototype": "list-extend-with",
+                      "parameters": {
+                        "array": {
+                          "limit": "%{limit}",
+                          "last_id": "&{filter.last_id}"
+                        }
+                      }
+                    }
+                  ],
+                  "accessor": {
+                    "prototype": "pattern",
+                    "parameters": []
+                  }
+                }
+              },
+              {
+                "prototype": "key-filter",
+                "parameters": {
+                  "accessor": {
+                    "prototype": "key",
+                    "parameters": {
+                      "keys": [
+                        "filter"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+        }
+    },
+    "schema": {
+        "properties": {
+          "pagination_storage": {
+            "title": "Storage to track progress",
+            "magement": {
+              "type": "storage"
+            }
+          },
+          "limit": {
+            "title": "Items to read",
+            "type": "number",
+            "ui": {
+              "ui:placeholder": "1000"
+            }
+          }
+        },
+        "required": [
+          "pagination_storage"
+        ]
+      }
+}

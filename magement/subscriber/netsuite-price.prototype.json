@@ -1,0 +1,68 @@
+{
+  "$schema": "https://di.schema.mediact.com/register.prototype.json",
+  "type": "subscriber",
+  "identifier": "netsuite-price-retrieve",
+  "name": "Netsuite - Price - Retrieve",
+  "object": {
+    "prototype": "http-subscriber",
+    "parameters": {
+        "client": "%{client}",
+        "request": {
+            "uri": "/query/v1/suiteql?limit=&{limit}",
+            "method": "post",
+            "payload": {
+              "q": "SELECT i.id, i.itemid, m.price, m.pricelevelname, c.symbol as currency, i.lastmodifieddate FROM item i JOIN itemprice m ON i.id = m.item JOIN currency c ON c.id = m.currencypage WHERE pricelevelname = '%{pricetype}' AND i.id > &{last_id} ORDER BY i.id ASC"
+            },
+            "payloadType": "data"
+        },
+        "transformer": {
+            "prototype": "netsuite-pagination-reader",
+            "parameters": {
+                "limit": "%{limit}",
+                "pagination_storage": "%{pagination_storage}"
+            }
+        }
+    }
+  },
+  "schema": {
+    "properties": {
+      "client": {
+        "title": "Client",
+        "ui": {
+          "di:type": "http-client",
+          "ui:placeholder": "Default client"
+        }
+      },
+      "pagination_storage": {
+        "title": "Storage to track progress",
+        "magement": {
+          "type": "storage"
+        }
+      },
+      "limit": {
+        "title": "Items to read",
+        "type": "number",
+        "default": 1000
+      },
+      "pricetype": {
+        "title": "Type of price",
+        "type": "string",
+        "enum": [
+          "B2C (Base Price)",
+          "B2B"
+        ],
+        "enumNames": [
+          "B2C (Base Price)",
+          "B2B"
+        ],
+        "default": "B2C (Base Price)"
+      }
+    },
+    "required": [
+      "client",
+      "pagination_storage",
+      "pricetype",
+      "limit"
+    ]
+  }
+}
